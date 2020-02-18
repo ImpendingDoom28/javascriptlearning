@@ -23,7 +23,7 @@ function handlerCallBackForm(event) {
     const target = event.target;
     if(target.classList.contains('want-faster')) {
         target.checked ? showElem(document.querySelector('.fast-range'))
-                        : hideElem(document.querySelector('.fast-range'))
+                        : hideElem(document.querySelector('.fast-range'));
     }
 }
 
