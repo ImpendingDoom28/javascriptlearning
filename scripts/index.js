@@ -95,11 +95,13 @@ function handlerCallBackForm(event) {
                 }
             }
         } else {
-            for(const elem of formCalculate.elements) {
-                if(elem.value === 'mobileTemplates' && target.value === 'adapt') {
-                    elem.disabled = true;
-                    elem.checked = false;
-                    break;
+            if(target.value === 'adapt') {
+                for(const elem of formCalculate.elements) {
+                    if(elem.value === 'mobileTemplates') {
+                        elem.disabled = true;
+                        elem.checked = false;
+                        break;
+                    }
                 }
             }
         }
