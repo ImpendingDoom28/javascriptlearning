@@ -5,6 +5,7 @@
 //закроет строчку и будут ошибки
 let str1 = 'Привет, Мир!';
 
+const DAY_STRING = ['день', 'дня', 'дней'];
 const DATA = {
     whichSite: ['landing', 'multiPage', 'onlineStore'],
     price: [4000, 8000, 26000],
@@ -27,6 +28,24 @@ const endButton = document.querySelector('.end-button');
 const total = document.querySelector('.total');
 const fastRange = document.querySelector('.fast-range');
 const totalPriceSum = document.querySelector('.total_price__sum');
+const typeSite = document.querySelector('.type-site');
+const maxDeadline = document.querySelector('.max-deadline');
+const rangeDeadline = document.querySelector('.range-deadline');
+const deadlineValue = document.querySelector('.deadline-value');
+
+const desktopTemplates = document.getElementById('desktopTemplates'),
+    desktopTemplatesValue = document.querySelector('.desktopTemplates_value');
+const adapt = document.getElementById('adapt'),
+    adaptValue = document.querySelector('.adapt_value');
+const mobileTemplates = document.getElementById('mobileTemplates'),
+     mobileTemplatesValue = document.querySelector('.mobileTemplates_value');
+const editable = document.getElementById('editable'),
+    editableValue = document.querySelector('.editable_value');
+
+function declOfNum(n, titles) {
+    return n + ' ' + titles[n % 10 === 1 && n % 100 !== 11 ?
+        0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2];
+}
 
 function showElem(elem) {
     elem.style.display = 'block';
@@ -36,10 +55,28 @@ function hideElem(elem) {
     elem.style.display = 'none';
 }
 
+function renderTextContent(total, site, maxDay, minDay) {
+
+    desktopTemplates.checked ? desktopTemplatesValue.textContent = 'Да' : desktopTemplatesValue.textContent = 'Нет';
+    adapt.checked ? adaptValue.textContent = 'Да' : adaptValue.textContent = 'Нет';
+    mobileTemplates.checked ? mobileTemplatesValue.textContent = 'Да' : mobileTemplatesValue.textContent = 'Нет';
+    editable.checked ? editableValue.textContent = 'Да' : editableValue.textContent = 'Нет';
+
+    typeSite.textContent = site;
+    totalPriceSum.textContent = total;
+    maxDeadline.textContent = declOfNum(maxDay, DAY_STRING);
+    rangeDeadline.min = minDay;
+    rangeDeadline.max = maxDay;
+    deadlineValue.textContent = declOfNum(rangeDeadline.value, DAY_STRING);
+}
+
 function priceCalculation(elem) {
     let result = 0,
         index = 0,
-        options = [];
+        options = [],
+        site = '',
+        maxDeadlineDay = DATA.deadlineDay[index][1],
+        minDeadlineDay = DATA.deadlineDay[index][0];
 
     if (elem.name === 'whichSite') {
         for(const item of formCalculate.elements) {
@@ -56,6 +93,9 @@ function priceCalculation(elem) {
     for (const item of formCalculate.elements) {
         if(item.name === 'whichSite' && item.checked) {
             index = DATA.whichSite.indexOf(item.value);
+            site = item.dataset.site;
+            maxDeadlineDay = DATA.deadlineDay[index][1];
+            minDeadlineDay = DATA.deadlineDay[index][0];
         } else if(item.classList.contains('calc-handler') && item.checked) {
             options.push(item.value);
         }
@@ -77,7 +117,7 @@ function priceCalculation(elem) {
     });
     result += DATA.price[index];
 
-    totalPriceSum.textContent = result;
+    renderTextContent(result, site, maxDeadlineDay, minDeadlineDay);
 }
 
 function handlerCallBackForm(event) {
